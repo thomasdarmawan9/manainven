@@ -1,62 +1,115 @@
 <?php
 
-class Product_model extends CI_model{
+class Product_model extends CI_model
+{
+
     public function getAllProduct()
     {
-        $query = $this->db->get('product');  
-        return $query->result_array();  
+        return $this->db->order_by('productID', 'desc')->get('product')->result();
     }
 
-    public function add()
+    public function getProductByID($id)
     {
-        $data = array(
-            "productName" => $this->input->post('productID', true),
-            "productName" => $this->input->post('productName', true),
-            "price" => $this->input->post('price', true),
-            "category" => $this->input->post('category', true),
-            "stock" => $this->input->post('stock', true),
-        );
-
-        $this->db->insert('add', $data);
+        return $this->db->where('productID', $id)->get('product')->row();
     }
 
-    public function deleteProduct($id)
+    public function getLastProduct()
     {
-        $this->db->where('productID', $id);
-        $this->db->delete('product');
+        return $this->db->order_by('productID', 'desc')->get('product')->row();
     }
 
-    public function getProductById($id)
+    public function addProduct($table, $data)
     {
-        return $this->db->get_where('product', ['productID' => $id])->row_array();
+        $product = $this->db->insert($table, $data);
+
+        if ($product) {
+            $data['results'] = $this->getAllProduct();
+        } else {
+            $data['results'] = 'error';
+        }
+
+        return $data;
     }
 
-    public function detail($id)
+    public function updateProduct($table, $data, $id)
     {
-        $this->load->view('templates/header.php', $data);
-        $this->load->view('product/detail', $data);
-        $this->load->view('templates/footer.php');
+        $product =  $this->db->where('productID', $id)->update($table, $data);
+
+        if ($product) {
+            $data['results'] = $this->getAllProduct();
+        } else {
+            $data['results'] = 'error';
+        }
+
+        return $data;
     }
 
-    public function editProduct()
+    public function removeProduct($table, $id)
     {
-        $data = array(
-            "productID" => $this->input->post('productID', true),
-            "productName" => $this->input->post('productName', true),
-            "price" => $this->input->post('price', true),
-            "category" => $this->input->post('category', true),
-            "stock" => $this->input->post('stock', true),
-        );
+        $product = $this->db->where('productID', $id)->delete($table);
 
-        $this->db->where('productID', $this->input->post('id'));
-        $this->db->edit('product', $data);
+        if ($product) {
+            $data['results'] = $this->getAllProduct();
+        } else {
+            $data['results'] = 'error';
+        }
+
+        return $data;
     }
 
-    public function searchProduct()
+    public function getBranchProduct()
     {
-        $keyword = $this->input->post('keyword', true);
-        $this->db->like('productName', $keyword);
-        $this->db->or_like('price', $keyword);
-        return $this->db->get('product')->result_array();
+        return $this->db->select('a.id as productBranchID, b.productID, b.productName, c.id as branchID')
+            ->from('branch_has_product a')
+            ->join('product b', 'a.productID = b.productID', 'left')
+            ->join('branch c', 'a.branchID = c.id', 'left')
+            ->order_by('a.id', 'desc')
+            ->get()
+            ->result();
+    }
+
+    public function getBranchProductByID($id)
+    {
+        return $this->db->where('id', $id)->get('branch_has_product')->row();
+    }
+
+
+    public function addProductBranch($data, $table)
+    {
+        $product = $this->db->insert($table, $data);
+
+        if ($product) {
+            $data['results'] = 'success';
+        } else {
+            $data['results'] = 'error';
+        }
+
+        return $data;
+    }
+
+    public function updateProductBranch($table, $data, $id)
+    {
+        $update = $this->db->where('id', $id)->update($table, $data);
+
+        if($update){
+            $data['results'] = $this->getBranchProduct();
+        }else{
+            $data['results'] = 'error';
+        }
+
+        return $data;
+    }
+
+    public function removeProductBranch($table, $id)
+    {
+        $remove = $this->db->where('id', $id)->delete($table);
+
+        if ($remove) {
+            $data['results'] = $this->getBranchProduct();
+        } else {
+            $data['results'] = 'error';
+        }
+
+        return $data;
     }
 }
