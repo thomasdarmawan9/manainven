@@ -2,6 +2,36 @@
 
 class Inventory_model extends CI_model{
 
+    public function getBranchData($branch_id, $filter){
+
+        if($filter == 'harian'){
+            $select = 'DATE_FORMAT(a.createdDate, "%e %b %Y") as date, a.unit as unit_sold, a.unit * d.price as total,';
+            $group_by = '';
+        }else if($filter == 'mingguan'){
+            $select = 'SUM(a.unit) as unit_sold, (SUM(a.unit) * d.price) as total,';
+            $group_by = 'GROUP BY YEARWEEK(a.createdDate)';
+        }else{
+            $select = 'SUM(a.unit) as unit_sold, (SUM(a.unit) * d.price) as total,';
+            $group_by = 'GROUP BY MONTH(a.createdDate)';
+        }
+
+
+        $sql = 'SELECT c.name as branch,
+                    d.productCode as product_code,
+                    '.$select.'
+                    d.productName as product_name,
+                    d.price as unit_cost
+                FROM transaction a
+                LEFT JOIN branch_has_product b ON a.branch_productID = b.id
+                INNER JOIN branch c ON b.branchID = c.id
+                INNER JOIN product d ON b.productID = d.productID
+                WHERE b.branchID = '.$branch_id.'
+                '.$group_by.'
+                ';
+
+        return $this->db->query($sql)->result();
+    }
+
     public function getWarehouseData($id)
     {
        $where = '';
