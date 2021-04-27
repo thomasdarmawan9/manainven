@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<!--begin::Head-->
-	<head><base href="../../../../">
+	<head>
 		<meta charset="utf-8" />
 		<title>WITA FOTOCOPY</title>
 		<meta name="description" content="Singin page example" />
@@ -55,7 +55,7 @@
 						<!--begin::Signin-->
 						<div class="login-form" style="margin-top:-200px;">
 							<!--begin::Form-->
-							<form action="<?php echo base_url('login/aksi_login'); ?>" method="post" >
+							<form action="">
 								<!--begin::Title-->
 								<div class="pb-5 pb-lg-15">
 									<h3 class="font-weight-bolder text-dark font-size-h2 font-size-h1-lg">Sign In</h3>
@@ -66,7 +66,7 @@
 								<!--begin::Form group-->
 								<div class="form-group">
 									<label class="font-size-h6 font-weight-bolder text-dark">Usename</label>
-									<input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="username" autocomplete="off" />
+									<input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="text" name="username" id="username" autocomplete="off" />
 								</div>
 								<!--end::Form group-->
 								<!--begin::Form group-->
@@ -74,12 +74,12 @@
 									<div class="d-flex justify-content-between mt-n5">
 										<label class="font-size-h6 font-weight-bolder text-dark pt-5">Password</label>
 									</div>
-									<input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="password" name="password" autocomplete="off" />
+									<input class="form-control h-auto py-7 px-6 rounded-lg border-0" type="password" name="password" id="password" autocomplete="off" />
 								</div>
 								<!--end::Form group-->
 								<!--begin::Action-->
 								<div class="pb-lg-0 pb-5">
-									<button type="submit" value="Login" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Sign In</button>
+									<button type="button" id="btn-login" class="btn btn-primary font-weight-bolder font-size-h6 px-8 py-4 my-3 mr-3">Sign In</button>
 								</div>
 								<!--end::Action-->
 							</form>
@@ -105,25 +105,29 @@
 		<!--end::Global Theme Bundle-->
 		<!--begin::Page Scripts(used by this page)-->
 		<script src="<?php echo base_url('assets/template/js/pages/custom/login/login-3.js?v=7.0.4')?>"></script>
+		<script>
+		    $("#btn-login").click(function() {
+				var username = $('#username').val();
+				var password = $('#password').val();
+				// console.log(<?php api_url() ?>);
+				if (username != "" && password != "") {
+					$.ajax({
+                    url: "<?php api_url() ?>" + "login/aksi_login?" + "username=" + username + "&password=" + password,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(result) {
+						console.log(result);
+                    },
+                    error: function(xhr, status, errorThrown) {
+						console.log(xhr, status, errorThrown);
+                    }
+            		});
+				}else{
+					console.log("data kosong");
+				}
+			});
+		</script>
 		<!--end::Page Scripts-->
 	</body>
 	<!--end::Body-->
 </html>
-
-	<!-- <form action="<?php echo base_url('login/aksi_login'); ?>" method="post">		
-		<table>
-			<tr>
-				<td>Username</td>
-				<td><input type="text" name="username"></td>
-			</tr>
-			<tr>
-				<td>Password</td>
-				<td><input type="password" name="password"></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><input type="submit" value="Login"></td>
-			</tr>
-		</table>
-	</form> -->
-	
