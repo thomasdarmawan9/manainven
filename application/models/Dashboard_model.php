@@ -10,7 +10,7 @@ class Dashboard_model extends CI_model{
                 FROM branch_has_product a
                 INNER JOIN branch b ON a.branchID = b.id
                 INNER JOIN product c ON a.productID = c.productID
-                LEFT JOIN (SELECT COALESCE(SUM(f.unit), 0) as total_sold,
+                LEFT JOIN (SELECT SUM(f.unit) as total_sold,
                             f.branch_productID
                             FROM branch_has_product e
                             LEFT JOIN transaction f ON f.branch_productID = e.id
@@ -27,8 +27,8 @@ class Dashboard_model extends CI_model{
 
         foreach($results as $row){
             $data = array(
-                'label' => '',
-                'stack' => '',
+                'label' => $row->branch,
+                'stack' => $row->branch,
                 'data' => [$row->total_unit_sold, $row->total_branch]
             );
 
