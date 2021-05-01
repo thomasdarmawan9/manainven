@@ -8,7 +8,26 @@ class Dashboard extends CI_Controller {
         $this->load->model('Dashboard_model', 'dashboard');
     }
 
-    public function index()
+    public function _remap($method, $param = array()){
+		if(method_exists($this, $method)){
+			$level = $this->session->userdata('roles');
+			if(!empty($level)){
+				return call_user_func_array(array($this, $method), $param);
+			}else{
+				redirect(base_url('login'));				
+			}
+		}else{
+			display_404();
+		}
+	}
+
+    public function index(){
+        $this->load->view('templates/header.php');
+        $this->load->view('dashboard/index');
+        $this->load->view('templates/footer.php');
+    }
+
+    public function index_get()
     {
         if ($this->input->server('REQUEST_METHOD') === 'GET') {
 

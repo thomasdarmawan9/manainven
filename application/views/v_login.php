@@ -105,6 +105,7 @@
 		<!--end::Global Theme Bundle-->
 		<!--begin::Page Scripts(used by this page)-->
 		<script src="<?php echo base_url('assets/template/js/pages/custom/login/login-3.js?v=7.0.4')?>"></script>
+		<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 		<script>
 		    $("#btn-login").click(function() {
 				var username = $('#username').val();
@@ -117,6 +118,15 @@
                     dataType: 'json',
                     success: function(result) {
 						console.log(result);
+							if(result.results == ""){
+								Swal.fire({
+								icon: 'error',
+								title: 'Oops...',
+								text: 'Password anda salah!',
+							})
+						}else{
+							window.location = "<?php api_url() ?>";
+						}
                     },
                     error: function(xhr, status, errorThrown) {
 						console.log(xhr, status, errorThrown);
