@@ -125,7 +125,7 @@
 												<div class="menu-submenu">
 													<i class="menu-arrow"></i>
 														<ul class="menu-subnav">
-														<?php if($this->session->userdata('roles') == "staff A"){ ?>
+														<?php if($this->session->userdata('branchID') == "1"){ ?>
 															
 															<li class="menu-item" aria-haspopup="true">
 															<a href="<?php echo base_url(); ?>cabang" class="menu-link">
@@ -136,7 +136,7 @@
 															</a>
 															</li>
 
-														<?php }else if($this->session->userdata('roles') == "staff B"){ ?>
+														<?php }else if($this->session->userdata('branchID') == "2"){ ?>
 															<li class="menu-item" aria-haspopup="true">
 															<a href="<?php echo base_url(); ?>cabang" class="menu-link">
 															<i class="menu-bullet menu-bullet-dot">
@@ -160,6 +160,7 @@
 												<div class="menu-submenu">
 													<i class="menu-arrow"></i>
 														<ul class="menu-subnav">
+														<?php if($this->session->userdata('branchID') == "1"){ ?>
 														<li class="menu-item" aria-haspopup="true">
 															<a href="<?php echo base_url(); ?>warehouse" class="menu-link">
 															<i class="menu-bullet menu-bullet-dot">
@@ -168,6 +169,7 @@
 															<span class="menu-text">Warehouse A</span>
 															</a>
 														</li>
+														<?php }else if($this->session->userdata('branchID') == "2"){ ?>
 														<li class="menu-item" aria-haspopup="true">
 															<a href="<?php echo base_url(); ?>warehouse" class="menu-link">
 															<i class="menu-bullet menu-bullet-dot">
@@ -176,6 +178,7 @@
 															<span class="menu-text">Warehouse B</span>
 															</a>
 														</li>
+														<?php } ?>
 													</ul>
 												</div>
 											</li>
@@ -962,7 +965,7 @@
 						<i class="symbol-badge bg-success"></i>
 					</div>
 					<div class="d-flex flex-column">
-						<a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">James Jones</a>
+						<a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary"><?php echo $this->session->userdata("name"); ?></a>
 						<div class="text-muted mt-1">Application Developer</div>
 						<div class="navi mt-2">
 							<a href="#" class="navi-item">
@@ -980,10 +983,10 @@
 											<!--end::Svg Icon-->
 										</span>
 									</span>
-									<span class="navi-text text-muted text-hover-primary">jm@softplus.com</span>
+									<!-- <span class="navi-text text-muted text-hover-primary">jm@softplus.com</span> -->
 								</span>
 							</a>
-							<a href="#" class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5">Sign Out</a>
+							<a href="<?php echo base_url() ?>/login/logout" class="btn btn-sm btn-light-primary font-weight-bolder py-2 px-5">Sign Out</a>
 						</div>
 					</div>
 				</div>

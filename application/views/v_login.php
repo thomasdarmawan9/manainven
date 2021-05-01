@@ -113,7 +113,7 @@
 				// console.log(<?php api_url() ?>);
 				if (username != "" && password != "") {
 					$.ajax({
-                    url: "<?php api_url() ?>" + "login/aksi_login?" + "username=" + username + "&password=" + password,
+                    url: "<?php base_url() ?>" + "login/aksi_login?" + "username=" + username + "&password=" + password,
                     type: 'GET',
                     dataType: 'json',
                     success: function(result) {

@@ -52,8 +52,10 @@ class Login extends CI_Controller{
 
 	function session_set($user){
 		$this->session->set_userdata('id', $user->userID);
+		$this->session->set_userdata('name', $user->name);
 		$this->session->set_userdata('username', $user->username);
 		$this->session->set_userdata('roles', $user->roles);
+		$this->session->set_userdata('branchID', $user->branchID);
 	}
 
 	function logout(){
