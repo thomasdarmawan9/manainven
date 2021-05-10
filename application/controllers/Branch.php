@@ -7,15 +7,40 @@ class Branch extends CI_Controller {
         $this->load->model('Branch_model', 'branch');
     }
 
-    public function index()
+    public function _remap($method, $param = array()){
+		if(method_exists($this, $method)){
+			$level = $this->session->userdata('roles');
+			if(!empty($level)){
+				return call_user_func_array(array($this, $method), $param);
+			}else{
+				redirect(base_url('login'));				
+			}
+		}else{
+			display_404();
+		}
+	}
+
+    // public function index(){
+    //     $this->load->view('templates/header.php');
+    //     $this->load->view('branch/index');
+    //     $this->load->view('templates/footer.php');
+    // }
+
+    public function index(){
+        $this->load->view('templates/header.php');
+        $this->load->view('branch/cabang');
+        $this->load->view('templates/footer.php');
+    }
+
+    public function api_index()
     {
         if ($this->input->server('REQUEST_METHOD') === 'GET') {
             $branch = $this->branch->getAllBranch();
-            $data['results'] = $branch;
+            $data['data'] = $branch;
 			$data['status'] = 200;
 			$data['message'] = 'Success';
         }else{
-            $data['results'] = 'Failed';
+            $data['data'] = 'Failed';
 			$data['status'] = 405;
 			$data['message'] = 'Method not allowed';
         }

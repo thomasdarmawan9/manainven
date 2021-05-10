@@ -41,6 +41,8 @@
 		<!--begin::Page Scripts(used by this page)-->
 		<script src="assets/template/js/pages/widgets.js?v=7.0.4"></script>
 		<!--end::Page Scripts-->
+		<script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+		
 	</body>
 	<!--end::Body-->
 </html>

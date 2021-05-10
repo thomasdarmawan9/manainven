@@ -68,9 +68,28 @@ class Product_model extends CI_model
             ->result();
     }
 
+    public function api_get_product_from_warehouse()
+    {
+        return $this->db->select('warehouse_has_stock.productID, productName, productCode, warehouse.name as warehouse, branchID, warehouse_has_stock.stock, product.price')
+            ->from('warehouse')
+            ->join('warehouse_has_branch', 'warehouse.id = warehouse_has_branch.warehouseID', 'inner')
+            ->join('warehouse_has_stock', 'warehouse.id = warehouse_has_stock.warehouseID', 'inner')
+            ->join('product', 'product.productID = warehouse_has_stock.productID', 'inner')
+            ->where('warehouse_has_branch.branchID', $this->session->userdata('branchID'))
+            ->get()
+            ->result();
+    }
+
     public function getBranchProductByID($id)
     {
-        return $this->db->where('id', $id)->get('branch_has_product')->row();
+        return $this->db->select('a.id as productBranchID, b.productID, b.productCode, b.productName, a.stock, a.price, c.id as branchID')
+            ->where('branchID', $id)
+            ->from('branch_has_product a')
+            ->join('product b', 'a.productID = b.productID', 'left')
+            ->join('branch c', 'a.branchID = c.id', 'left')
+            ->order_by('a.id', 'desc')
+            ->get()
+            ->result();
     }
 
 

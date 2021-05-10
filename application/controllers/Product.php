@@ -1,4 +1,7 @@
 <?php
+header('Access-Control-Allow-Origin: *');
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 
 class Product extends CI_Controller {
     public function __construct()
@@ -10,18 +13,41 @@ class Product extends CI_Controller {
 
     public function index()
     {
+        $this->load->view('templates/header.php');
+        $this->load->view('product/index');
+        $this->load->view('templates/footer.php');
+    }
+
+    public function api_index()
+    {
         if ($this->input->server('REQUEST_METHOD') === 'GET') {
             $product = $this->product->getAllProduct();
-            $data['results'] = $product;
+            $data['data'] = $product;
 			$data['status'] = 200;
 			$data['message'] = 'Success';
         }else{
-            $data['results'] = 'Failed';
+            $data['data'] = 'Failed';
 			$data['status'] = 405;
 			$data['message'] = 'Method not allowed';
         }
 
         echo json_encode($data);
+    }
+
+    public function api_get_product_from_warehouse(){
+        if ($this->input->server('REQUEST_METHOD') === 'GET') {
+            $product = $this->product->api_get_product_from_warehouse();
+            $data['data'] = $product;
+			$data['status'] = 200;
+			$data['message'] = 'Success';
+        }else{
+            $data['data'] = 'Failed';
+			$data['status'] = 405;
+			$data['message'] = 'Method not allowed';
+        }
+
+        echo json_encode($data);
+        
     }
 
     public function addProduct()
@@ -194,6 +220,43 @@ class Product extends CI_Controller {
         echo json_encode($data);
     }
 
+    public function getProductByPCode()
+    {
+        $post = json_decode(file_get_contents('php://input'), true);
+        if ($this->input->server('REQUEST_METHOD') === 'POST') {
+            $product = 
+            $this->db->select('*')
+            ->from('product')
+            ->where('productCode', $this->input->post('PCODE'))
+            ->get();
+            $data['data'] = $product->row_array();
+			$data['status'] = 200;
+			$data['message'] = 'Success';
+        }else{
+            $data['data'] = 'Failed';
+			$data['status'] = 405;
+			$data['message'] = 'Method not allowed';
+        }
+
+        echo json_encode($data);
+    }
+
+    public function getBranchProductByID($id)
+    {
+        if ($this->input->server('REQUEST_METHOD') === 'GET') {
+            $product = $this->product->getBranchProductByID($id);
+            $data['data'] = $product;
+			$data['status'] = 200;
+			$data['message'] = 'Success';
+        }else{
+            $data['data'] = 'Failed';
+			$data['status'] = 405;
+			$data['message'] = 'Method not allowed';
+        }
+
+        echo json_encode($data);
+    }
+
     public function addBranchProduct()
     {
         if ($this->input->server('REQUEST_METHOD') === 'POST') {
@@ -201,18 +264,20 @@ class Product extends CI_Controller {
             date_default_timezone_set('Asia/Jakarta');
             $post = json_decode(file_get_contents("php://input"),true);
 
-            if(empty($post['product'])){
+            if(empty($this->input->post('product'))){
                 $results = [];
                 $message = 'Product Required';
                 $status = 204;
-            }elseif(empty($post['branch'])){
+            }elseif(empty($this->input->post('branch'))){
                 $results = [];
                 $message = 'Branch Required';
                 $status = 204;
             }else{
                 $insert = array(
-                    'productID' => $post['product'],
-                    'branchID' => $post['branch'],
+                    'productID' => $this->input->post('product'),
+                    'branchID' => $this->input->post('branch'),
+                    'stock' => $this->input->post('stock'),
+                    'price' => $this->input->post('price'),
                     'createdDate' => date('Y-m-d H:i:s'),
                     'updateAt' => date('Y-m-d H:i:s')
                 );
@@ -245,31 +310,23 @@ class Product extends CI_Controller {
 
     public function updateBranchProduct()
     {
-        if ($this->input->server('REQUEST_METHOD') === 'PUT') {
+        if ($this->input->server('REQUEST_METHOD') === 'POST') {
 
             date_default_timezone_set('Asia/Jakarta');
             $post = json_decode(file_get_contents("php://input"),true);
 
-            if(empty($this->input->get('id'))){
+            if(empty($this->input->post('id'))){
                 $results = [];
                 $message = 'ID Not Found';
                 $status = 204;
-            }else if(empty($post['product'])){
-                $results = [];
-                $message = 'Product Required';
-                $status = 204;
-            }elseif(empty($post['branch'])){
-                $results = [];
-                $message = 'Branch Required';
-                $status = 204;
-            }else{
+            }else if(!empty($this->input->post('stock')) && !empty($this->input->post('price'))){
                 $update = array(
-                    'productID' => $post['product'],
-                    'branchID' => $post['branch'],
+                    'stock' => $this->input->post('stock'),
+                    'price' => $this->input->post('price'),
                     'updateAt' => date('Y-m-d H:i:s')
                 );
 
-                $product = $this->product->updateProductBranch('branch_has_product', $update, $this->input->get('id'));
+                $product = $this->product->updateProductBranch('branch_has_product', $update, $this->input->post('id'));
 
                 if($product['results'] != 'error'){
                     $results = $product['results'];
@@ -280,6 +337,10 @@ class Product extends CI_Controller {
                     $message = 'Product failed to updated';
                     $status = 400;
                 }
+            }else{
+                $results = [];
+                $message = 'Product failed to updated';
+                $status = 400;
             }
 
         }else{

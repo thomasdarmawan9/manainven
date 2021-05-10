@@ -16,11 +16,13 @@
 		<link href="<?php echo base_url('assets/template/plugins/global/plugins.bundle.css?v=7.0.4')?>" rel="stylesheet" type="text/css" />
 		<link href="<?php echo base_url('assets/template/plugins/custom/prismjs/prismjs.bundle.css?v=7.0.4')?>" rel="stylesheet" type="text/css" />
 		<link href="<?php echo base_url('assets/template/css/style.bundle.css?v=7.0.4')?>" rel="stylesheet" type="text/css" />
+		<link href="//cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
 		<!--end::Global Theme Styles-->
 		<!--begin::Layout Themes(used by all pages)-->
 		<!--end::Layout Themes-->
 		<link rel="shortcut icon" href="<?php echo base_url('assets/template/media/logos/favicon.ico')?>" />
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
@@ -128,21 +130,30 @@
 														<?php if($this->session->userdata('branchID') == "1"){ ?>
 															
 															<li class="menu-item" aria-haspopup="true">
-															<a href="<?php echo base_url(); ?>cabang" class="menu-link">
+															<a href="<?php echo base_url(); ?>branch" class="menu-link">
 															<i class="menu-bullet menu-bullet-dot">
 															<span></span>
 															</i>
-															<span class="menu-text">Cabang A</span>
+															<span class="menu-text"><?php echo $this->session->userdata('branch') ?></span>
 															</a>
 															</li>
 
 														<?php }else if($this->session->userdata('branchID') == "2"){ ?>
 															<li class="menu-item" aria-haspopup="true">
+															<a href="<?php echo base_url(); ?>branch" class="menu-link">
+															<i class="menu-bullet menu-bullet-dot">
+															<span></span>
+															</i>
+															<span class="menu-text"><?php echo $this->session->userdata('branch') ?></span>
+															</a>
+															</li>
+														<?php } else if($this->session->userdata('roles') == "admin"){ ?>
+															<li class="menu-item" aria-haspopup="true">
 															<a href="<?php echo base_url(); ?>cabang" class="menu-link">
 															<i class="menu-bullet menu-bullet-dot">
 															<span></span>
 															</i>
-															<span class="menu-text">Cabang B</span>
+															<span class="menu-text">Master Cabang</span>
 															</a>
 															</li>
 														<?php } ?>
@@ -498,19 +509,7 @@
 									<!--end::Dropdown-->
 								</div>
 								<!--end::Tablet & Mobile Search-->
-								<!--begin::Add Product-->
-								<div class="dropdown">
-									<!--begin::Toggle-->
-									<div class="topbar-item mr-4" data-toggle="dropdown" data-offset="10px,0px">
-										<div class="btn font-weight-bolder btn-sm btn-light-success px-5">Add Product</div>
-									</div>
-									<!--end::Toggle-->
-									<!--begin::Dropdown-->
-									<div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-md">
-									</div>
-									<!--end::Dropdown-->
-								</div>
-								<!--end::Add Product-->
+						
 								<!--begin::Quick Panel-->
 								<div class="topbar-item mr-4">
 									<div class="btn btn-icon btn-sm btn-clean btn-text-dark-75 btn-dropdown" id="kt_quick_panel_toggle">
