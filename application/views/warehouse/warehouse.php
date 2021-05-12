@@ -11,11 +11,11 @@
 					<!--begin::Engage Widget 8-->
 					<div class="card card-custom gutter-b card-stretch card-shadowless">
 						<div class="card-body p-0 d-flex">
-							<div class="d-flex align-items-start justify-content-start flex-grow-1 bg-light-warning p-8 card-rounded flex-grow-1 position-relative" style="background-color: #bbdefb  !important">
+							<div class="d-flex align-items-start justify-content-start flex-grow-1 bg-light-warning p-8 card-rounded flex-grow-1 position-relative" style="background-color: #b2dfdb !important">
 								<div class="d-flex flex-column align-items-start flex-grow-1 h-100">
 									<div class="p-1 flex-grow-1">
-										<h1 class="text-warning font-weight-bolder">Data <?php echo $this->session->userdata("branch") ?></h1>
-										<p class="text-dark-50 font-weight-bold mt-3">Cabang</p>
+										<h1 class="text-warning font-weight-bolder">Data <?php echo $this->session->userdata("warehouse") ?></h1>
+										<p class="text-dark-50 font-weight-bold mt-3">Warehouse</p>
 									</div>
 								</div>
 								<div class="position-absolute right-0 bottom-0 mr-5 overflow-hidden">
@@ -48,7 +48,7 @@
 					    <!--begin::Header-->
 					    <div class="card-header border-0 pt-5">
 							<div class="">
-								<a type="button" class="btn btn-primary" data-toggle="modal" data-target="#addpc">Tambah Produk Cabang</a>
+								<a type="button" class="btn btn-primary" data-toggle="modal" data-target="#addpc">Tambah Produk Warehouse</a>
 							</div>
 						</div>
 						<!--end::Header-->
@@ -56,7 +56,7 @@
 						<div class="card-body pt-3 pb-0">
 							<!--begin::Table-->
 							<div class="table-responsive">
-								<table class="table table-border table-vertical-center" id="table_cabang">
+								<table class="table table-border table-vertical-center" id="table_warehouse">
 									<thead>
 										<tr>
                                             <th scope="col">No</th>
@@ -94,29 +94,29 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Tambah product di cabang</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Tambah product di Warehouse</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
             <form>
+            <input type="text" class="form-control" id="wid" value="<?php echo $this->session->userdata('warehouseID') ?>" hidden>
         <div class="form-group">
-            Product Code : <label for="labelpbarang" id= "lpbarang"></label>
+        <label for="exampleFormControlSelect1">Code Barang</label>
+            <input type="text" class="form-control" id="codebarang">
         </div>
         <div class="form-group">
-            <label for="exampleFormControlSelect1">Pilih Product</label>
-            <select class="form-control" id="pbarang">
-                
-            </select>
+            <label for="exampleFormControlSelect1">Nama Barang</label>
+            <input type="text" class="form-control" id="namabarang">
         </div>
         <div class="form-group">
             <label for="stock">Stock</label>
-            <input type="number" class="form-control" id="stockcabang">
+            <input type="number" class="form-control" id="stockbarang">
         </div>
         <div class="form-group">
             <label for="pricecabang">Price</label>
-            <input type="number" class="form-control" id="pricecabang">
+            <input type="number" class="form-control" id="pricebarang">
         </div>
         </form>
       </div>
@@ -134,7 +134,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="">Tambah product di cabang</h5>
+        <h5 class="modal-title" id="">Edit product di Warehouse</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -142,13 +142,14 @@
       <div class="modal-body">
             <form id="">
             <input type="text" class="form-control" name="id_pc" id="id_pc" hidden>
+            <input type="text" class="form-control" name="pid" id="pid" hidden>
         <div class="form-group">
             <label for="stock">Product Code</label>
-            <input type="text" class="form-control" name="pc_code_edit" id="pc_code_edit" disabled>
+            <input type="text" class="form-control" name="pc_code_edit" id="pc_code_edit" >
         </div>
         <div class="form-group">
             <label for="stock">Product Name</label>
-            <input type="text" class="form-control" name="pc_name_edit" id="pc_name_edit" disabled>
+            <input type="text" class="form-control" name="pc_name_edit" id="pc_name_edit" >
         </div>
         <div class="form-group">
             <label for="stock">Stock</label>
@@ -174,25 +175,7 @@
 			$(document).ready(function() {
                 cabangData();
                 var productCode = $("#pbarang").val();
-                //ajax for dropdown 
-                $.ajax({
-                    url : "<?php echo base_url() ?>product/api_get_product_from_warehouse",
-                    method : "GET",
-                    dataType : 'json',
-                    success: function(data){
-                        console.log("<?php echo $this->session->userdata('branchID') ?>");
-                        // console.log(data.data[0].productName);
-                        var html = '<option value="">No Selected</option>';
-                        var i;
-                        for(i=0; i<data.data.length; i++){
-                            html += '<option value='+data.data[i].productCode+'>'+data.data[i].productName+'</option>';
-                        }
-                        $('#pbarang').html(html);
-                    },
-                    error: function(xhr, status, errorThrown) {
-                        console.log(xhr, status, errorThrown);
-                    }
-                });
+                
 
                 //ajax for PCODE
                 $('#pbarang').change(function(){ 
@@ -209,7 +192,7 @@
                         success: function(data){
                             // console.log(data.data.productID);
                             var html = '';
-                            html += data.data.productCode+'<input type="text" id="vallpbarang" value="'+data.data.productCode+'" hidden /><input type="text" id="namebarang" value="'+data.data.productName+'" hidden />';
+                            html += data.data.productCode+'<input type="text" id="vallpbarang" value="'+data.data.productID+'" hidden />';
                             $('#lpbarang').html(html);
                         },
                         error: function(xhr, status, errorThrown) {
@@ -220,39 +203,49 @@
                 
                 //ajax add product branch
                 $("#btn-submit-pb").click(function() {
-                    var vallpbarang = $("#vallpbarang").val();
-                    var stockcabang = $("#stockcabang").val();
-                    var pricecabang = $("#pricecabang").val();
-                    var namebarang = $("#namebarang").val();
+                    var wid = $("#wid").val();
+                    var codebarang = $("#codebarang").val();
+                    var namabarang = $("#namabarang").val();
+                    var stockbarang = $("#stockbarang").val();
+                    var pricebarang = $("#pricebarang").val();
                     $.ajax({
-                        url : "<?php echo base_url() ?>product/addBranchProduct",
+                        url : "<?php echo base_url() ?>warehouse/addWarehouseStock",
                         method : "POST",
                         dataType : 'json',
                         data: {
-                                'product': vallpbarang,
-                                'productName': namebarang,
-                                'branch': "<?php echo $this->session->userdata('branchID') ?>",
-                                'stock': stockcabang,
-                                'price': pricecabang,
+                                'id' : wid,
+                                'productCode' : codebarang,
+                                'productName': namabarang,
+                                'stock': stockbarang,
+                                'price': pricebarang,
                         },
                         success: function(data){
-                            // console.log(vallpbarang);
                             // console.log("data berhasil dibuat");
-                            Swal.fire(
+                            console.log(data);
+                            if(data != "Failed"){
+                                Swal.fire(
                                     'Recorded!',
                                     'Data Succesfully Added.',
                                     'success'
                                     )
-                            $('#addpc').modal('toggle');
-                            $('#table_cabang').DataTable().destroy();
-                            cabangData();
-                            $("#vallpbarang").val("");
-                            $("#stockcabang").val("");
-                            $("#pricecabang").val("");
-                            $("#namebarang").val("");
-                            $("#lpbarang").val("");
-                            $("#pbarang").val("");
-                            $('label[id*="lpbarang"]').text('');
+                                $('#addpc').modal('toggle');
+                                $('#table_warehouse').DataTable().destroy();
+                                cabangData();
+                                $("#codebarang").val("");
+                                $("#namabarang").val("");
+                                $("#stockbarang").val("");
+                                $("#pricebarang").val("");
+                            }else{
+                                Swal.fire(
+                                    'error',
+                                    'Oops...',
+                                    'Password anda salah!',
+                                )
+                                $('#addpc').modal('toggle');
+                                $('#table_warehouse').DataTable().destroy();
+                                cabangData();
+                            }
+                            
                         },
                         error: function(xhr, status, errorThrown) {
                             console.log(xhr, status, errorThrown);
@@ -263,23 +256,23 @@
 
                 function cabangData(){
                     
-                    var t = $('#table_cabang').DataTable({
+                    var w = $('#table_warehouse').DataTable({
                     
                         "ajax": {
-                            url : "<?php echo base_url() ?>/product/getBranchProductByID/<?php echo $this->session->userdata('branchID') ?>",
+                            url : "<?php echo base_url() ?>/warehouse/getWarehouseProductByID/<?php echo $this->session->userdata('warehouseID') ?>",
                             type : 'GET'
                         },
                         //Set column definition initialisation properties.
                         "columns": [
-                            {"data": "productBranchID"},
-                            {"data": "productID"},
+                            {"data": "warehouseID"},
+                            {"data": "productCode"},
                             {"data": "productName"},
                             {"data": "stock"},
                             {"data": "price"},
                             {
                                 mRender: function (data, type, row) {
-                                    return '<a class="table-edit dt-center editor-edit" data-id="' + row.productBranchID + '" data-product-code="' + row.productCode + '" data-product-name="' + row.productName + '" data-stock="' + row.stock + '" data-price="' + row.price + '"><i class="fa fa-pen"></i></a>\
-                                    &nbsp;\<a class="table-delete dt-center editor-delete" data-id="' + row.productBranchID + '"><i class="fa fa-trash"></i></a>'
+                                    return '<a class="table-edit dt-center editor-edit" data-id="' + row.warehouseID + '" data-product-id="' + row.productID + '" data-product-code="' + row.productCode + '" data-product-name="' + row.productName + '" data-stock="' + row.stock + '" data-price="' + row.price + '"><i class="fa fa-pen"></i></a>\
+                                    &nbsp;\<a class="table-delete dt-center editor-delete" data-id="' + row.id + '" data-product-id="' + row.productID + '"><i class="fa fa-trash"></i></a>'
                                 }
                             }
                         ],
@@ -291,17 +284,18 @@
                         "order": [[ 1, 'asc' ]]
                     });
 
-                    t.on( 'draw.dt', function () {
-                        var PageInfo = $('#table_cabang').DataTable().page.info();
-                        t.column(0, { page: 'current' }).nodes().each( function (cell, i) {
+                    w.on( 'draw.dt', function () {
+                        var PageInfo = $('#table_warehouse').DataTable().page.info();
+                        w.column(0, { page: 'current' }).nodes().each( function (cell, i) {
                             cell.innerHTML = i + 1 + PageInfo.start;
                         } );
                     } );
                 }
 
                 //Update a record
-                $('#table_cabang').on('click', '.editor-edit', function () {
+                $('#table_warehouse').on('click', '.editor-edit', function () {
                     var id = $(this).attr("data-id");
+                    var pid = $(this).attr("data-product-id");
                     var product_code = $(this).attr("data-product-code");
                     var product_name = $(this).attr('data-product-name');
                     var stock        = $(this).attr('data-stock');
@@ -309,6 +303,7 @@
                     
                     $('#updatepc').modal('show');
                     $('[name="id_pc"]').val(id);
+                    $('[name="pid"]').val(pid);
                     $('[name="pc_code_edit"]').val(product_code);
                     $('[name="pc_name_edit"]').val(product_name);
                     $('[name="editstockcabang"]').val(stock);
@@ -316,31 +311,36 @@
                 });
 
                 $("#btn-edit-pb").click(function() { 
-                    var id              = $("#id_pc").val();
+                    var pid             = $("#pid").val();
+                    var product_name    = $("#pc_name_edit").val();
+                    var product_code    = $("#pc_code_edit").val();
                     var stock           = $("#editstockcabang").val();
                     var price           = $("#editpricecabang").val();
-                    console.log(id);
-                    console.log(stock);
-                    console.log(price);
+                    // console.log(pid);
+                    // console.log(product_name);
+                    // console.log(product_code);
+                    // console.log(stock);
+                    // console.log(price);
                     $.ajax({
-                        url : "<?php echo base_url() ?>product/updateBranchProduct",
+                        url : "<?php echo base_url() ?>product/updateProduct",
                         method : "POST",
                         dataType : 'json',
                         data: {
-                                'id' : id,
+                                'id' : pid,
+                                'productName' : product_name,
+                                'productCode' : product_code,
                                 'stock': stock,
                                 'price': price,
                         },
                         success: function(data){
-                            // console.log(vallpbarang);
-                            // console.log("data berhasil dibuat");
+                            console.log(data);
                             Swal.fire(
                                     'Updated!',
                                     'Data Succesfully Updated.',
                                     'success'
                                     )
                             $('#updatepc').modal('toggle');
-                            $('#table_cabang').DataTable().destroy();
+                            $('#table_warehouse').DataTable().destroy();
                             cabangData();
                         },
                         error: function(xhr, status, errorThrown) {
@@ -351,8 +351,9 @@
 
 
                 // Delete a record
-                  $('#table_cabang').on('click', '.editor-delete', function () {
+                  $('#table_warehouse').on('click', '.editor-delete', function () {
                         var id = $(this).attr("data-id");
+                        var pid = $(this).attr("data-product-id");
                         Swal.fire({
                         title: 'Are you sure?',
                         text: "You won't be able to revert this!",
@@ -364,17 +365,22 @@
                         }).then((result) => {
                         if (result.isConfirmed) {
                             $.ajax({
-                            url: '<?php echo base_url() ?>product/deleteBranchProduct?id='+id,
-                            type: 'DELETE',
-                            data: {request: 2, id: id},
+                            url: '<?php echo base_url() ?>warehouse/deleteWarehouseStock',
+                            type: 'POST',
+                            data: { 
+                                    request: 2, 
+                                    id: id,
+                                    pid: pid
+                                  },
                             success: function(response){
+                                console.log(response);
                                 if(response){
                                     Swal.fire(
                                     'Deleted!',
                                     'Your file has been deleted.',
                                     'success'
                                     )
-                                    $('#table_cabang').DataTable().destroy();
+                                    $('#table_warehouse').DataTable().destroy();
                                     cabangData();
                                 }else{
                                     alert("Invalid ID.");

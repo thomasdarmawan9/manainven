@@ -111,41 +111,25 @@ class Product extends CI_Controller {
 
     public function updateProduct()
     {
-        if ($this->input->server('REQUEST_METHOD') === 'PUT') {
+        if ($this->input->server('REQUEST_METHOD') === 'POST') {
 
             date_default_timezone_set('Asia/Jakarta');
             $post = json_decode(file_get_contents("php://input"),true);
 
-            if(empty($this->input->get('id'))){
+            if(empty($this->input->post('id'))){
                 $results = [];
                 $message = 'ID Not Found';
                 $status = 204;
-            }else if(empty($post['code'])){
-                $results = [];
-                $message = 'Code Required';
-                $status = 204;
-            }else if(empty($post['name'])){
-                $results = [];
-                $message = 'Name Required';
-                $status = 204;
-            }elseif(empty($post['price'])){
-                $results = [];
-                $message = 'Price Required';
-                $status = 204;
-            }elseif(empty($post['stock'])){
-                $results = [];
-                $message = 'Stock Required';
-                $status = 204;
             }else{
                 $update = array(
-                    'productCode' => $post['code'],
-                    'productName' => $post['name'],
-                    'price' => $post['price'],
-                    'stock' => $post['stock'],
+                    'productCode' => $this->input->post('productCode'),
+                    'productName' => $this->input->post('productName'),
+                    'price' => $this->input->post('price'),
+                    'stock' => $this->input->post('stock'),
                     'updateAt' => date('Y-m-d H:i:s')
                 );
 
-                $product = $this->product->updateProduct('product', $update, $this->input->get('id'));
+                $product = $this->product->updateProduct('product', $update, $this->input->post('id'));
 
                 if($product['results'] != 'error'){
                     $results = $product['results'];
@@ -275,6 +259,7 @@ class Product extends CI_Controller {
             }else{
                 $insert = array(
                     'productID' => $this->input->post('product'),
+                    'productName' => $this->input->post('productName'),
                     'branchID' => $this->input->post('branch'),
                     'stock' => $this->input->post('stock'),
                     'price' => $this->input->post('price'),

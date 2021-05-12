@@ -107,21 +107,13 @@
 									<div class="menu-submenu">
 										<i class="menu-arrow"></i>
 										<ul class="menu-subnav">
-											<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
-												<a href="<?php echo base_url(); ?>product" class="menu-link menu-toggle">
-													<i class="menu-bullet menu-bullet-line">
-														<span></span>
-													</i>
-													<span class="menu-text">Products</span>
-													<i class="menu-arrow"></i>
-												</a>
-											</li>
+											
 											<li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover">
 												<a href="<?php echo base_url(); ?>inventory" class="menu-link menu-toggle">
 													<i class="menu-bullet menu-bullet-line">
 														<span></span>
 													</i>
-													<span class="menu-text">Cabang</span>
+													<span class="menu-text">Product</span>
 													<i class="menu-arrow"></i>
 												</a>											
 												<div class="menu-submenu">
@@ -177,7 +169,7 @@
 															<i class="menu-bullet menu-bullet-dot">
 															<span></span>
 															</i>
-															<span class="menu-text">Warehouse A</span>
+															<span class="menu-text"><?php echo $this->session->userdata('warehouse') ?></span>
 															</a>
 														</li>
 														<?php }else if($this->session->userdata('branchID') == "2"){ ?>
@@ -186,7 +178,7 @@
 															<i class="menu-bullet menu-bullet-dot">
 															<span></span>
 															</i>
-															<span class="menu-text">Warehouse B</span>
+															<span class="menu-text"><?php echo $this->session->userdata('warehouse') ?></span>
 															</a>
 														</li>
 														<?php } ?>

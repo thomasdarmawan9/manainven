@@ -9,6 +9,9 @@ class Warehouse extends CI_Controller {
 
     public function index()
     {
+        $this->load->view('templates/header.php');
+        $this->load->view('warehouse/warehouse');
+        $this->load->view('templates/footer.php');
     }
 
     public function getWarehouse(){
@@ -47,6 +50,22 @@ class Warehouse extends CI_Controller {
             $data['data'] = $warehouse;
 			$data['status'] = 200;
 			$data['message'] = 'success';
+        }else{
+            $data['data'] = 'Failed';
+			$data['status'] = 405;
+			$data['message'] = 'Method not allowed';
+        }
+
+        echo json_encode($data);
+    }
+
+    public function getWarehouseProductByID($id)
+    {
+        if ($this->input->server('REQUEST_METHOD') === 'GET') {
+            $warehouse = $this->warehouse->getWarehouseProductByID($id);
+            $data['data'] = $warehouse;
+			$data['status'] = 200;
+			$data['message'] = 'Success';
         }else{
             $data['data'] = 'Failed';
 			$data['status'] = 405;
@@ -324,29 +343,34 @@ class Warehouse extends CI_Controller {
             $post = json_decode(file_get_contents("php://input"),true);
 
 
-            if(empty($post['warehouse'])){
+            if(empty($this->input->post('id'))){
                 $results = [];
                 $message = 'Warehouse Required';
                 $status = 204;
-            }else if(empty($post['product'])){
-                $results = [];
-                $message = 'Product Required';
-                $status = 204;
-            }else if(empty($post['stock'])){
-                $results = [];
-                $message = 'Stock Required';
-                $status = 204;
             }else{
-                $insert = array(
-                    'warehouseID' => $post['warehouse'],
-                    'productID' => $post['product'],
-                    'stock' => $post['stock'],
+                $insertawal = array(
+                    'productCode' => $this->input->post('productCode'),
+                    'productName' => $this->input->post('productName'),
+                    'price' => $this->input->post('price'),
+                    'stock' => $this->input->post('stock'),
                     'createdDate' => date('Y-m-d H:i:s'),
                     'updateAt' => date('Y-m-d H:i:s')
                 );
 
-                $warehouse = $this->warehouse->addWarehouseStock('warehouse_has_stock', $insert, $post['product'], $post['warehouse']);
+                $productawal = $this->db->insert('product', $insertawal);
+                $last_insert_id = $this->db->insert_id();
 
+                if($productawal){
+                    $insert = array(
+                        'warehouseID' => $this->input->post('id'),
+                        'productID' => $last_insert_id,
+                        'createdDate' => date('Y-m-d H:i:s'),
+                        'updateAt' => date('Y-m-d H:i:s')
+                    );
+    
+                    $warehouse = $this->warehouse->addWarehouseStock('warehouse_has_stock', $insert, $last_insert_id, $this->input->post('id'));    
+                }
+               
                 if($warehouse['results'] != 'error'){
                     $results = $warehouse['results'];
                     $message = 'Stock successfully added';
@@ -428,18 +452,31 @@ class Warehouse extends CI_Controller {
     }
 
     public function deleteWarehouseStock(){
-        if ($this->input->server('REQUEST_METHOD') === "DELETE") {
-            if(empty($this->input->get('id'))){
+        if ($this->input->server('REQUEST_METHOD') === "POST") {
+            if(empty($this->input->post('id') && $this->input->post('pid'))){
                 $results = [];
                 $message = 'ID Not Found';
                 $status = 204;
             }else{
 
-                $warehouse = $this->warehouse->removeWarehouseStock('warehouse_has_stock', $this->input->get('id'));
-
+                $warehouse = $this->warehouse->removeWarehouseStock('warehouse_has_stock', $this->input->post('id'));
+                
                 if($warehouse['results'] != 'error'){
+                    $pid = $this->input->post('pid');
+                    $deleteproduct = $this->db->query('DELETE FROM `product` WHERE `productID` ="'.$pid.'"');
+
+                    if($deleteproduct){
+                        $results = [];
+                        $message = 'Product successfully deleted';
+                        $status = 200;
+                    }else{
+                        $results = [];
+                        $message = 'Product failed to delete';
+                        $status = 400;
+                    }
+
                     $results = $warehouse['results'];
-                    $message = 'Stock successfully deleted';
+                    $message = 'Product successfully deleted';
                     $status = 200;
                 }else{
                     $results = [];
