@@ -5,11 +5,11 @@ class Dashboard_model extends CI_model{
     public function getStockProduct(){
 
         $sql = 'SELECT b.name as branch,
-                COALESCE(SUM(c.stock), 0) as total_branch,
+                COALESCE(SUM(a.stock), 0) as total_branch,
                 COALESCE(d.total_sold, 0) as total_unit_sold
                 FROM branch_has_product a
                 INNER JOIN branch b ON a.branchID = b.id
-                INNER JOIN product c ON a.productID = c.productID
+                -- INNER JOIN product c ON a.productID = c.productCode
                 LEFT JOIN (SELECT SUM(f.unit) as total_sold,
                             f.branch_productID
                             FROM branch_has_product e
@@ -39,26 +39,90 @@ class Dashboard_model extends CI_model{
     }
 
     public function getWarehouseBranchStock(){
-        $results = $this->db->select('SUM(a.stock) as stock_branch, SUM(b.stock) as stock_warehouse')
-        ->from('product a')
-        ->join('warehouse_has_stock b', 'a.productID = b.productID', 'left')
-        ->order_by('b.id', 'desc')
+        $result_branch = $this->db->select('id')
+        ->from('branch')
         ->get()
-        ->result();
+        ->result_array();
 
-        $stock = array();
+        
 
-        foreach($results as $row){
-            $data = array(
-                'label' => 'Total Barang',
-                'data' => [$row->stock_warehouse, $row->stock_branch]
-            );
+        if($result_branch){
 
-            array_push($stock, $data);
+            $result_stock_trans = $this->db->select('sum(unit) as stock_cb')
+            ->from('transaction')
+            ->join('branch_has_product', 'transaction.branch_productID = branch_has_product.id', 'inner')
+            ->where('branch_has_product.branchID',$result_branch[0]['id'])
+            ->get()
+            ->result_array();
+
+            if($result_stock_trans){
+                $results = $this->db->select('SUM(a.stock) as stock_warehouse, SUM(b.stock) - ' .$result_stock_trans[0]['stock_cb'].' as stock_branch' )
+                ->from('product a')
+                ->join('branch_has_product b', 'a.productCode = b.productID', 'left')
+                ->order_by('b.id', 'desc')
+                ->where('branchID',$result_branch[0]['id'])
+                ->get()
+                ->result();
+
+                $stock = array();
+
+                foreach($results as $row){
+                    $data = array(
+                        'label' => 'Total Barang',
+                        'data' => [$row->stock_warehouse, $row->stock_branch]
+                    );
+
+                    array_push($stock, $data);
+                }
+                
+                return $stock;
+            }
         }
+    
 
-        return $stock;
+    }
 
+    public function getWarehouseBranchStock2(){
+        $result_branch = $this->db->select('id')
+        ->from('branch')
+        ->get()
+        ->result_array();
+
+        if($result_branch){
+            $result_stock_trans = $this->db->select('sum(unit) as stock_cb')
+            ->from('transaction')
+            ->join('branch_has_product', 'transaction.branch_productID = branch_has_product.id', 'inner')
+            ->where('branch_has_product.branchID',$result_branch[1]['id'])
+            ->get()
+            ->result_array();
+
+            if($result_stock_trans){
+                
+                $results = $this->db->select('SUM(a.stock) as stock_warehouse, SUM(b.stock) - ' .$result_stock_trans[0]['stock_cb']. ' as stock_branch')
+                ->from('product a')
+                ->join('branch_has_product b', 'a.productCode = b.productID', 'left')
+                ->order_by('b.id', 'desc')
+                ->where('branchID',$result_branch[1]['id'])
+                ->get()
+                ->result();
+
+                $stock = array();
+
+                foreach($results as $row){
+                    $data = array(
+                        'label' => 'Total Barang',
+                        'data' => [$row->stock_warehouse, $row->stock_branch]
+                    );
+        
+                    array_push($stock, $data);
+                }
+        
+                return $stock;
+
+            }
+
+        }
+    
     }
 
 }

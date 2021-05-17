@@ -40,19 +40,29 @@ class Dashboard extends CI_Controller {
                 'datasets' => $datasets_product
             );
 
-            // Data untuk ngecek product yang masih ada di warehouse dan di cabang
+            // Data untuk ngecek product yang masih ada di warehouse dan di cabang 1
 
-            $labels_stock = ['Total Barang di Warehouse', 'Total Barang di Cabang'];
-            $datasets_stock = $this->dashboard->getWarehouseBranchStock();
-            $results_stock = array(
-                'labels' => $labels_stock,
-                'datasets' => $datasets_stock
+            $labels_stock1 = ['Total Barang di Warehouse Cabang Jakarta Timur', 'Total Barang di Cabang Jakarta Timur'];
+            $datasets_stock1 = $this->dashboard->getWarehouseBranchStock();
+            $results_stock1 = array(
+                'labels' => $labels_stock1,
+                'datasets' => $datasets_stock1
             );
 
+             // Data untuk ngecek product yang masih ada di warehouse dan di cabang 2
+
+             $labels_stock2 = ['Total Barang di Warehouse Cabang Jakarta Selatan', 'Total Barang di Cabang Jakarta Selatan'];
+             $datasets_stock2 = $this->dashboard->getWarehouseBranchStock2();
+             $results_stock2 = array(
+                 'labels' => $labels_stock2,
+                 'datasets' => $datasets_stock2
+             );
+ 
 
             $results = array(
                 'stock_product' => $results_product,
-                'stock_branch_warehouse' => $results_stock
+                'stock_branch_warehouse_cb_jt' => $results_stock1,
+                'stock_branch_warehouse_cb_js' => $results_stock2
             );
 			$status = 200;
 			$message = 'Success';
@@ -62,7 +72,7 @@ class Dashboard extends CI_Controller {
 			$message = 'Method not allowed';
         }
 
-        $data['product'] = $results;
+        $data['data'] = $results;
         $data['status'] = $status;
         $data['message'] = $message;
 

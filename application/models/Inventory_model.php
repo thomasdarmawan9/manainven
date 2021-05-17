@@ -15,7 +15,6 @@ class Inventory_model extends CI_model{
             $group_by = 'GROUP BY MONTH(a.createdDate)';
         }
 
-
         $sql = 'SELECT c.name as branch,
                     d.productCode as product_code,
                     '.$select.'
@@ -24,7 +23,7 @@ class Inventory_model extends CI_model{
                 FROM transaction a
                 LEFT JOIN branch_has_product b ON a.branch_productID = b.id
                 INNER JOIN branch c ON b.branchID = c.id
-                INNER JOIN product d ON b.productID = d.productID
+                INNER JOIN product d ON b.productID = d.productCode
                 WHERE b.branchID = '.$branch_id.'
                 '.$group_by.'
                 ';
@@ -44,7 +43,7 @@ class Inventory_model extends CI_model{
 
        return $this->db->select('
                             a.id as stock_id,
-                            a.stock as warehouse_stock,
+                            c.stock as warehouse_stock,
                             b.name as warehouse,
                             c.productCode as product_code,
                             c.productName as product_name,

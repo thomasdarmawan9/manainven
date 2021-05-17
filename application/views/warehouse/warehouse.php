@@ -333,7 +333,7 @@
                                 'price': price,
                         },
                         success: function(data){
-                            console.log(data);
+                            // console.log(data);
                             Swal.fire(
                                     'Updated!',
                                     'Data Succesfully Updated.',
@@ -373,7 +373,7 @@
                                     pid: pid
                                   },
                             success: function(response){
-                                console.log(response);
+                                // console.log(response);
                                 if(response){
                                     Swal.fire(
                                     'Deleted!',

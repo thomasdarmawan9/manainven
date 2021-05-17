@@ -21,6 +21,11 @@
 		<!--begin::Layout Themes(used by all pages)-->
 		<!--end::Layout Themes-->
 		<link rel="shortcut icon" href="<?php echo base_url('assets/template/media/logos/favicon.ico')?>" />
+		<style>
+			.nav-item .a-modif{
+				color:black !important;
+			}
+		</style>
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
 	</head>
