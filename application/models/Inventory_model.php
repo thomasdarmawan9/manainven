@@ -4,15 +4,15 @@ class Inventory_model extends CI_model{
 
     public function getBranchData($branch_id, $filter){
 
-        if($filter == 'harian'){
+        if($filter == 'harian' || $filter == 'Harian'){
             $select = 'DATE_FORMAT(a.createdDate, "%e %b %Y") as date, a.unit as unit_sold, a.unit * d.price as total,';
             $group_by = '';
-        }else if($filter == 'mingguan'){
-            $select = 'SUM(a.unit) as unit_sold, (SUM(a.unit) * d.price) as total,';
-            $group_by = 'GROUP BY YEARWEEK(a.createdDate)';
+        }else if($filter == 'mingguan' || $filter == 'Mingguan'){
+            $select = 'DATE_FORMAT(a.createdDate, "%e %b %Y") as date, a.unit as unit_sold, a.unit * d.price as total,';
+            $group_by = 'AND a.createdDate > DATE_SUB(NOW(), INTERVAL 1 WEEK) ORDER BY a.createdDate DESC';
         }else{
-            $select = 'SUM(a.unit) as unit_sold, (SUM(a.unit) * d.price) as total,';
-            $group_by = 'GROUP BY MONTH(a.createdDate)';
+            $select = 'DATE_FORMAT(a.createdDate, "%e %b %Y") as date, a.unit as unit_sold, a.unit * d.price as total,';
+            $group_by = 'AND a.createdDate > DATE_SUB(NOW(), INTERVAL 1 MONTH) ORDER BY a.createdDate DESC';
         }
 
         $sql = 'SELECT c.name as branch,

@@ -36,10 +36,10 @@
 					    <div class="card-header border-0 pt-5">
 							<div class="">
 								<!-- <a type="button" class="btn btn-primary" data-toggle="modal" data-target="#addpc">Tambah Produk Cabang</a> -->
-                                <select class="form-control" id="filter">
-                                    <option val="harian">Harian</option>
-                                    <option val="mingguan">Mingguan</option>
-                                    <option val="bulanan">bulanan</option>
+                                <select class="form-control" name="filter" id="filter">
+                                    <option value="harian">Semua</option>
+                                    <option value="mingguan">Minggu ini</option>
+                                    <option value="bulanan">bulan ini</option>
                                 </select>
 							</div>
 						</div>
@@ -53,6 +53,7 @@
 										<tr>
                                             <th scope="col">No</th>
                                             <th scope="col">PCODE</th>
+                                            <th scope="col">Date</th>
                                             <th scope="col">Produck Name</th>
                                             <th scope="col">Unit Sold</th>
                                             <th scope="col">Unit Cost</th>
@@ -87,7 +88,8 @@
         
         $('#filter').change(function(){ 
                     
-                    var filter = $("#filter").val();
+                    var filter = $('select[name=filter] option').filter(':selected').val();
+                    // console.log(filter);
                     // console.log(productCode);
                     $.ajax({
                         url : "<?php echo base_url() ?>/inventory/getBranchData?branch=<?php echo $this->session->userdata('branchID') ?>&filter="+filter,
@@ -105,6 +107,7 @@
                             "columns": [
                                 {"data": "product_code"},
                                 {"data": "product_code"},
+                                {"data": "date"},
                                 {"data": "product_name"},
                                 {"data": "unit_sold"},
                                 {"data": "unit_cost"},
@@ -136,13 +139,14 @@
                     var t = $('#table_report').DataTable({
 
                     "ajax": {
-                        url : "<?php echo base_url() ?>/inventory/getBranchData?branch=<?php echo $this->session->userdata('branchID') ?>&filter="+filter,
+                        url : "<?php echo base_url() ?>/inventory/getBranchData?branch=<?php echo $this->session->userdata('branchID') ?>&filter=harian",
                         type : 'GET'
                     },
                     //Set column definition initialisation properties.
                     "columns": [
                         {"data": "product_code"},
                         {"data": "product_code"},
+                        {"data": "date"},
                         {"data": "product_name"},
                         {"data": "unit_sold"},
                         {"data": "unit_cost"},
