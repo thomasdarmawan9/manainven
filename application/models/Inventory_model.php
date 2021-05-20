@@ -12,7 +12,7 @@ class Inventory_model extends CI_model{
             $group_by = 'AND a.createdDate > DATE_SUB(NOW(), INTERVAL 1 WEEK) ORDER BY a.createdDate DESC';
         }else{
             $select = 'DATE_FORMAT(a.createdDate, "%e %b %Y") as date, a.unit as unit_sold, a.unit * d.price as total,';
-            $group_by = 'AND a.createdDate > DATE_SUB(NOW(), INTERVAL 1 MONTH) ORDER BY a.createdDate DESC';
+            $group_by = 'AND MONTH(a.createdDate) = MONTH(CURRENT_DATE()) AND YEAR(a.createdDate) = YEAR(CURRENT_DATE())';
         }
 
         $sql = 'SELECT c.name as branch,
