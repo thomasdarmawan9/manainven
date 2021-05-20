@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2021 at 10:15 AM
+-- Generation Time: May 20, 2021 at 04:56 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 7.3.4
 
@@ -66,10 +66,10 @@ CREATE TABLE `branch_has_product` (
 --
 
 INSERT INTO `branch_has_product` (`id`, `productID`, `productName`, `branchID`, `stock`, `price`, `createdDate`, `updateAt`) VALUES
-(35, 'K-0002', 'Keyboard Asus', 2, 3, 300000, '2021-05-12 13:29:34', '2021-05-12 13:29:54'),
 (36, 'K-0001', 'Keyboard HP', 2, 3, 150000, '2021-05-12 13:31:24', '2021-05-12 13:31:24'),
 (37, 'K-0003', 'Keyboard Lenovo', 2, 2, 340000, '2021-05-12 13:33:53', '2021-05-12 13:33:53'),
-(38, 'M-0001', 'Mouse Asus2', 1, 10, 250000, '2021-05-14 09:46:02', '2021-05-14 09:46:02');
+(38, 'M-0001', 'Mouse Asus2', 1, 10, 250000, '2021-05-14 09:46:02', '2021-05-14 09:46:02'),
+(39, 'HP-0002', 'HP Real Me', 2, 7, 4400000, '2021-05-18 13:29:23', '2021-05-18 13:29:32');
 
 -- --------------------------------------------------------
 
@@ -187,7 +187,8 @@ INSERT INTO `product` (`productID`, `productCode`, `productName`, `price`, `stoc
 (17, 'K-0001', 'Keyboard HP', 300000, 33, '2021-05-12 13:05:47', '2021-05-12 13:05:47'),
 (18, 'K-0002', 'Keyboard Asus', 424000, 98, '2021-05-12 13:08:19', '2021-05-12 13:08:19'),
 (19, 'M-0001', 'Mouse Asus2', 240000, 25, '2021-05-12 13:15:19', '2021-05-12 14:13:46'),
-(20, 'K-0003', 'Keyboard Lenovo', 375000, 15, '2021-05-12 13:25:49', '2021-05-12 13:25:49');
+(20, 'K-0003', 'Keyboard Lenovo', 375000, 15, '2021-05-12 13:25:49', '2021-05-12 13:25:49'),
+(22, 'HP-0002', 'HP Real Me', 4400000, 12, '2021-05-18 13:29:01', '2021-05-18 13:29:01');
 
 -- --------------------------------------------------------
 
@@ -314,8 +315,7 @@ CREATE TABLE `transaction` (
 --
 
 INSERT INTO `transaction` (`id`, `branch_productID`, `unit`, `createdDate`, `updateAt`) VALUES
-(1, 35, 2, '2021-04-19 00:00:00', '2021-04-19 00:00:00'),
-(2, 38, 1, '2021-04-26 00:00:00', '2021-04-26 00:00:00'),
+(2, 38, 1, '2021-05-12 00:00:00', '2021-04-26 00:00:00'),
 (3, 36, 1, '2021-04-07 00:00:00', '2021-04-07 00:00:00');
 
 -- --------------------------------------------------------
@@ -455,7 +455,8 @@ INSERT INTO `warehouse_has_stock` (`id`, `warehouseID`, `productID`, `createdDat
 (7, 3, 17, '2021-05-12 13:05:47', '2021-05-12 13:05:47'),
 (8, 3, 18, '2021-05-12 13:08:19', '2021-05-12 13:08:19'),
 (9, 1, 19, '2021-05-12 13:15:20', '2021-05-12 13:15:20'),
-(10, 3, 20, '2021-05-12 13:25:50', '2021-05-12 13:25:50');
+(10, 3, 20, '2021-05-12 13:25:50', '2021-05-12 13:25:50'),
+(12, 3, 22, '2021-05-18 13:29:02', '2021-05-18 13:29:02');
 
 --
 -- Indexes for dumped tables
@@ -584,7 +585,7 @@ ALTER TABLE `branch`
 -- AUTO_INCREMENT for table `branch_has_product`
 --
 ALTER TABLE `branch_has_product`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `customer`
@@ -608,7 +609,7 @@ ALTER TABLE `payment`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `productID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `productID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `purchaseorder`
@@ -668,7 +669,7 @@ ALTER TABLE `warehouse_has_branch`
 -- AUTO_INCREMENT for table `warehouse_has_stock`
 --
 ALTER TABLE `warehouse_has_stock`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- Constraints for dumped tables
