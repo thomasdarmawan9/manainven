@@ -62,7 +62,8 @@
                                             <th scope="col">No</th>
                                             <th scope="col">PCODE</th>
                                             <th scope="col">Nama Produk</th>
-                                            <th scope="col">Stock</th>
+                                            <th scope="col">Stock Awal</th>
+                                            <th scope="col">Stock Tersedia</th>
                                             <th scope="col">Price</th>
                                             <th scope="col"></th>
 										</tr>
@@ -275,6 +276,7 @@
                             {"data": "productID"},
                             {"data": "productName"},
                             {"data": "stock"},
+                            {"data": "stockNow"},
                             {"data": "price"},
                             {
                                 mRender: function (data, type, row) {

@@ -82,12 +82,14 @@ class Product_model extends CI_model
 
     public function getBranchProductByID($id)
     {
-        return $this->db->select('a.id as productBranchID, a.productID, a.productName, a.stock, a.price, c.id as branchID')
+        return
+            $this->db->select('a.id as productBranchID, a.productID, a.productName, a.stock, sum(a.stock - d.unit) as stockNow,a.price, c.id as branchID')
             ->where('branchID', $id)
             ->from('branch_has_product a')
             ->join('branch c', 'a.branchID = c.id', 'left')
+            ->join('transaction d','d.branch_productID = a.id', 'left')
             ->order_by('a.id', 'desc')
-            ->get()
+            ->get() 
             ->result();
     }
 
