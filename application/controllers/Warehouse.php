@@ -75,6 +75,22 @@ class Warehouse extends CI_Controller {
         echo json_encode($data);
     }
 
+    public function getWarehouseProductByIDOwner()
+    {
+        if ($this->input->server('REQUEST_METHOD') === 'GET') {
+            $warehouse = $this->warehouse->getWarehouseProductByIDOwner();
+            $data['data'] = $warehouse;
+			$data['status'] = 200;
+			$data['message'] = 'Success';
+        }else{
+            $data['data'] = 'Failed';
+			$data['status'] = 405;
+			$data['message'] = 'Method not allowed';
+        }
+
+        echo json_encode($data);
+    }
+
     public function addWarehouse(){
         if ($this->input->server('REQUEST_METHOD') === 'POST') {
 

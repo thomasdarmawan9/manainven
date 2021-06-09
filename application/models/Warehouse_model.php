@@ -34,6 +34,17 @@ class Warehouse_model extends CI_model{
             ->result();
     }
 
+    public function getWarehouseProductByIDOwner(){
+        return $this->db->select('a.id as id, a.warehouseID as warehouseID, c.name as warehouse, b.productID, b.productCode, b.productName, b.stock, b.price')
+            
+            ->from('warehouse_has_stock a')
+            ->join('product b', 'a.productID = b.productID', 'left')
+            ->join('warehouse c', 'a.warehouseID = c.id', 'left')
+            ->order_by('a.id', 'desc')
+            ->get()
+            ->result();
+    }
+
 
     public function getBranchWarehouseByID($id){
         return $this->db->where('id', $id)->get('warehouse_has_branch');

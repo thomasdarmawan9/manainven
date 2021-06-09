@@ -91,53 +91,99 @@
                     var filter = $('select[name=filter] option').filter(':selected').val();
                     // console.log(filter);
                     // console.log(productCode);
-                    $.ajax({
-                        url : "<?php echo base_url() ?>/inventory/getBranchData?branch=<?php echo $this->session->userdata('branchID') ?>&filter="+filter,
-                        method : "GET",
-                        dataType : 'json',
-                        success: function(data){
-                            $('#table_report').DataTable().destroy();
-                            var t = $('#table_report').DataTable({
+                    if("<?php echo $this->session->userdata('roles') != "owner" ?>"){
+                        $.ajax({
+                            url : "<?php echo base_url() ?>/inventory/getBranchData?branch=<?php echo $this->session->userdata('branchID') ?>&filter="+filter,
+                            method : "GET",
+                            dataType : 'json',
+                            success: function(data){
+                                $('#table_report').DataTable().destroy();
+                                var t = $('#table_report').DataTable({
 
-                            "ajax": {
-                                url : "<?php echo base_url() ?>/inventory/getBranchData?branch=<?php echo $this->session->userdata('branchID') ?>&filter="+filter,
-                                type : 'GET'
+                                "ajax": {
+                                    url : "<?php echo base_url() ?>/inventory/getBranchData?branch=<?php echo $this->session->userdata('branchID') ?>&filter="+filter,
+                                    type : 'GET'
+                                },
+                                //Set column definition initialisation properties.
+                                "columns": [
+                                    {"data": "product_code"},
+                                    {"data": "product_code"},
+                                    {"data": "date"},
+                                    {"data": "product_name"},
+                                    {"data": "unit_sold"},
+                                    {"data": "unit_cost"},
+                                    {"data": "total"}
+                                ],
+                                "columnDefs": [ {
+                                    "searchable": false,
+                                    "orderable": false,
+                                    "targets": 0
+                                } ],
+                                "order": [[ 1, 'asc' ]]
+                                });
+
+                                t.on( 'draw.dt', function () {
+                                var PageInfo = $('#table_report').DataTable().page.info();
+                                t.column(0, { page: 'current' }).nodes().each( function (cell, i) {
+                                    cell.innerHTML = i + 1 + PageInfo.start;
+                                } );
+                                } );
                             },
-                            //Set column definition initialisation properties.
-                            "columns": [
-                                {"data": "product_code"},
-                                {"data": "product_code"},
-                                {"data": "date"},
-                                {"data": "product_name"},
-                                {"data": "unit_sold"},
-                                {"data": "unit_cost"},
-                                {"data": "total"}
-                            ],
-                            "columnDefs": [ {
-                                "searchable": false,
-                                "orderable": false,
-                                "targets": 0
-                            } ],
-                            "order": [[ 1, 'asc' ]]
-                            });
+                            error: function(xhr, status, errorThrown) {
+                                console.log(xhr, status, errorThrown);
+                            }
+                        });
+                    }else{
+                        $.ajax({
+                            url : "<?php echo base_url() ?>/inventory/getBranchDataOwner?filter="+filter,
+                            method : "GET",
+                            dataType : 'json',
+                            success: function(data){
+                                $('#table_report').DataTable().destroy();
+                                var t = $('#table_report').DataTable({
 
-                            t.on( 'draw.dt', function () {
-                            var PageInfo = $('#table_report').DataTable().page.info();
-                            t.column(0, { page: 'current' }).nodes().each( function (cell, i) {
-                                cell.innerHTML = i + 1 + PageInfo.start;
-                            } );
-                            } );
-                        },
-                        error: function(xhr, status, errorThrown) {
-                            console.log(xhr, status, errorThrown);
-                        }
-                    });
+                                "ajax": {
+                                    url : "<?php echo base_url() ?>/inventory/getBranchDataOwner?filter="+filter,
+                                    type : 'GET'
+                                },
+                                //Set column definition initialisation properties.
+                                "columns": [
+                                    {"data": "product_code"},
+                                    {"data": "product_code"},
+                                    {"data": "date"},
+                                    {"data": "product_name"},
+                                    {"data": "unit_sold"},
+                                    {"data": "unit_cost"},
+                                    {"data": "total"}
+                                ],
+                                "columnDefs": [ {
+                                    "searchable": false,
+                                    "orderable": false,
+                                    "targets": 0
+                                } ],
+                                "order": [[ 1, 'asc' ]]
+                                });
+
+                                t.on( 'draw.dt', function () {
+                                var PageInfo = $('#table_report').DataTable().page.info();
+                                t.column(0, { page: 'current' }).nodes().each( function (cell, i) {
+                                    cell.innerHTML = i + 1 + PageInfo.start;
+                                } );
+                                } );
+                            },
+                            error: function(xhr, status, errorThrown) {
+                                console.log(xhr, status, errorThrown);
+                            }
+                        });
+                    }
+                    
         });
 
         // table awal data
         function cabangData(){
-                    var t = $('#table_report').DataTable({
-
+            if("<?php echo $this->session->userdata('roles') != "owner" ?>"){
+                var t = $('#table_report').DataTable({
+                    
                     "ajax": {
                         url : "<?php echo base_url() ?>/inventory/getBranchData?branch=<?php echo $this->session->userdata('branchID') ?>&filter=harian",
                         type : 'GET'
@@ -159,6 +205,32 @@
                     } ],
                     "order": [[ 1, 'asc' ]]
                     });
+            }else{
+                var t = $('#table_report').DataTable({
+                    
+                    "ajax": {
+                        url : "<?php echo base_url() ?>/inventory/getBranchDataOwner?filter=harian",
+                        type : 'GET'
+                    },
+                    //Set column definition initialisation properties.
+                    "columns": [
+                        {"data": "product_code"},
+                        {"data": "product_code"},
+                        {"data": "date"},
+                        {"data": "product_name"},
+                        {"data": "unit_sold"},
+                        {"data": "unit_cost"},
+                        {"data": "total"}
+                    ],
+                    "columnDefs": [ {
+                        "searchable": false,
+                        "orderable": false,
+                        "targets": 0
+                    } ],
+                    "order": [[ 1, 'asc' ]]
+                });
+            }
+                    
 
                     t.on( 'draw.dt', function () {
                     var PageInfo = $('#table_report').DataTable().page.info();

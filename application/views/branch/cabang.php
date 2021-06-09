@@ -62,6 +62,9 @@
                                             <th scope="col">No</th>
                                             <th scope="col">PCODE</th>
                                             <th scope="col">Nama Produk</th>
+                                            <?php if( $this->session->userdata('roles') == "owner"){ ?>
+                                            <th scope="col">Branch</th>
+                                            <?php } ?>
                                             <th scope="col">Stock Awal</th>
                                             <th scope="col">Stock Tersedia</th>
                                             <th scope="col">Price</th>
@@ -263,35 +266,67 @@
 
 
                 function cabangData(){
-                    
-                    var t = $('#table_cabang').DataTable({
-                    
-                        "ajax": {
-                            url : "<?php echo base_url() ?>/product/getBranchProductByID/<?php echo $this->session->userdata('branchID') ?>",
-                            type : 'GET'
-                        },
-                        //Set column definition initialisation properties.
-                        "columns": [
-                            {"data": "productBranchID"},
-                            {"data": "productID"},
-                            {"data": "productName"},
-                            {"data": "stock"},
-                            {"data": "stockNow"},
-                            {"data": "price"},
-                            {
-                                mRender: function (data, type, row) {
-                                    return '<a class="table-edit dt-center editor-edit" data-id="' + row.productBranchID + '" data-product-code="' + row.productCode + '" data-product-name="' + row.productName + '" data-stock="' + row.stock + '" data-price="' + row.price + '"><i class="fa fa-pen"></i></a>\
-                                    &nbsp;\<a class="table-delete dt-center editor-delete" data-id="' + row.productBranchID + '"><i class="fa fa-trash"></i></a>'
+                    if("<?php echo $this->session->userdata('roles') != "owner" ?>"){
+                        var t = $('#table_cabang').DataTable({
+                  
+                            "ajax": {
+                                url : "<?php echo base_url() ?>/product/getBranchProductByID/<?php echo $this->session->userdata('branchID') ?>",
+                                type : 'GET'
+                            },
+                            //Set column definition initialisation properties.
+                            "columns": [
+                                {"data": "productBranchID"},
+                                {"data": "productID"},
+                                {"data": "productName"},
+                                {"data": "stock"},
+                                {"data": "stockNow"},
+                                {"data": "price"},
+                                {
+                                    mRender: function (data, type, row) {
+                                        return '<a class="table-edit dt-center editor-edit" data-id="' + row.productBranchID + '" data-product-code="' + row.productCode + '" data-product-name="' + row.productName + '" data-stock="' + row.stock + '" data-price="' + row.price + '"><i class="fa fa-pen"></i></a>\
+                                        &nbsp;\<a class="table-delete dt-center editor-delete" data-id="' + row.productBranchID + '"><i class="fa fa-trash"></i></a>'
+                                    }
                                 }
-                            }
-                        ],
-                        "columnDefs": [ {
-                            "searchable": false,
-                            "orderable": false,
-                            "targets": 0
-                        } ],
-                        "order": [[ 1, 'asc' ]]
-                    });
+                            ],
+                            "columnDefs": [ {
+                                "searchable": false,
+                                "orderable": false,
+                                "targets": 0
+                            } ],
+                            "order": [[ 1, 'asc' ]]
+                        });
+                    }else{
+                        var t = $('#table_cabang').DataTable({
+                  
+                            "ajax": {
+                                url : "<?php echo base_url() ?>/product/getBranchProductByIDOwner",
+                                type : 'GET'
+                            },
+                            //Set column definition initialisation properties.
+                            "columns": [
+                                {"data": "productBranchID"},
+                                {"data": "productID"},
+                                {"data": "productName"},
+                                {"data": "branch"},
+                                {"data": "stock"},
+                                {"data": "stockNow"},
+                                {"data": "price"},
+                                {
+                                    mRender: function (data, type, row) {
+                                        return '<a class="table-edit dt-center editor-edit" data-id="' + row.productBranchID + '" data-product-code="' + row.productCode + '" data-product-name="' + row.productName + '" data-stock="' + row.stock + '" data-price="' + row.price + '"><i class="fa fa-pen"></i></a>\
+                                        &nbsp;\<a class="table-delete dt-center editor-delete" data-id="' + row.productBranchID + '"><i class="fa fa-trash"></i></a>'
+                                    }
+                                }
+                            ],
+                            "columnDefs": [ {
+                                "searchable": false,
+                                "orderable": false,
+                                "targets": 0
+                            } ],
+                            "order": [[ 1, 'asc' ]]
+                        });
+                    }
+                    
 
                     t.on( 'draw.dt', function () {
                         var PageInfo = $('#table_cabang').DataTable().page.info();
@@ -334,8 +369,6 @@
                                 'price': price,
                         },
                         success: function(data){
-                            // console.log(vallpbarang);
-                            // console.log("data berhasil dibuat");
                             Swal.fire(
                                     'Updated!',
                                     'Data Succesfully Updated.',

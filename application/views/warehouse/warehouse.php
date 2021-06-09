@@ -62,6 +62,9 @@
                                             <th scope="col">No</th>
                                             <th scope="col">PCODE</th>
                                             <th scope="col">Nama Produk</th>
+                                            <?php if( $this->session->userdata('roles') == "owner"){ ?>
+                                                <th scope="col">Warehouse</th>
+                                                <?php } ?>
                                             <th scope="col">Stock</th>
                                             <th scope="col">Price</th>
                                             <th scope="col"></th>
@@ -255,7 +258,7 @@
 
 
                 function cabangData(){
-                    
+                    if("<?php echo $this->session->userdata('roles') != "owner" ?>"){
                     var w = $('#table_warehouse').DataTable({
                     
                         "ajax": {
@@ -283,6 +286,36 @@
                         } ],
                         "order": [[ 1, 'asc' ]]
                     });
+                }else{
+                    var w = $('#table_warehouse').DataTable({
+                    
+                        "ajax": {
+                            url : "<?php echo base_url() ?>/warehouse/getWarehouseProductByIDOwner",
+                            type : 'GET'
+                        },
+                        //Set column definition initialisation properties.
+                        "columns": [
+                            {"data": "warehouseID"},
+                            {"data": "productCode"},
+                            {"data": "productName"},
+                            {"data": "warehouse"},
+                            {"data": "stock"},
+                            {"data": "price"},
+                            {
+                                mRender: function (data, type, row) {
+                                    return '<a class="table-edit dt-center editor-edit" data-id="' + row.warehouseID + '" data-product-id="' + row.productID + '" data-product-code="' + row.productCode + '" data-product-name="' + row.productName + '" data-stock="' + row.stock + '" data-price="' + row.price + '"><i class="fa fa-pen"></i></a>\
+                                    &nbsp;\<a class="table-delete dt-center editor-delete" data-id="' + row.id + '" data-product-id="' + row.productID + '"><i class="fa fa-trash"></i></a>'
+                                }
+                            }
+                        ],
+                        "columnDefs": [ {
+                            "searchable": false,
+                            "orderable": false,
+                            "targets": 0
+                        } ],
+                        "order": [[ 1, 'asc' ]]
+                    });
+                }
 
                     w.on( 'draw.dt', function () {
                         var PageInfo = $('#table_warehouse').DataTable().page.info();

@@ -144,9 +144,9 @@
 															<span class="menu-text"><?php echo $this->session->userdata('branch') ?></span>
 															</a>
 															</li>
-														<?php } else if($this->session->userdata('roles') == "admin"){ ?>
+														<?php } else if($this->session->userdata('roles') == "owner" || $this->session->userdata('roles') == "admin"){ ?>
 															<li class="menu-item" aria-haspopup="true">
-															<a href="<?php echo base_url(); ?>cabang" class="menu-link">
+															<a href="<?php echo base_url(); ?>branch" class="menu-link">
 															<i class="menu-bullet menu-bullet-dot">
 															<span></span>
 															</i>
@@ -184,6 +184,15 @@
 															<span></span>
 															</i>
 															<span class="menu-text"><?php echo $this->session->userdata('warehouse') ?></span>
+															</a>
+														</li>
+														<?php } else if($this->session->userdata('roles') == "owner" || $this->session->userdata('roles') == "admin"){ ?>
+															<li class="menu-item" aria-haspopup="true">
+															<a href="<?php echo base_url(); ?>warehouse" class="menu-link">
+															<i class="menu-bullet menu-bullet-dot">
+															<span></span>
+															</i>
+															<span class="menu-text">Master Warehouse</span>
 															</a>
 														</li>
 														<?php } ?>

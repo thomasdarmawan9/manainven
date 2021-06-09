@@ -31,6 +31,34 @@ class Inventory_model extends CI_model{
         return $this->db->query($sql)->result();
     }
 
+    public function getBranchDataOwner($filter){
+
+        if($filter == 'harian' || $filter == 'Harian'){
+            $select = 'DATE_FORMAT(a.createdDate, "%e %b %Y") as date, a.unit as unit_sold, a.unit * d.price as total,';
+            $group_by = '';
+        }else if($filter == 'mingguan' || $filter == 'Mingguan'){
+            $select = 'DATE_FORMAT(a.createdDate, "%e %b %Y") as date, a.unit as unit_sold, a.unit * d.price as total,';
+            $group_by = 'AND a.createdDate > DATE_SUB(NOW(), INTERVAL 1 WEEK) ORDER BY a.createdDate DESC';
+        }else{
+            $select = 'DATE_FORMAT(a.createdDate, "%e %b %Y") as date, a.unit as unit_sold, a.unit * d.price as total,';
+            $group_by = 'AND MONTH(a.createdDate) = MONTH(CURRENT_DATE()) AND YEAR(a.createdDate) = YEAR(CURRENT_DATE())';
+        }
+
+        $sql = 'SELECT c.name as branch,
+                    d.productCode as product_code,
+                    '.$select.'
+                    d.productName as product_name,
+                    d.price as unit_cost
+                FROM transaction a
+                LEFT JOIN branch_has_product b ON a.branch_productID = b.id
+                INNER JOIN branch c ON b.branchID = c.id
+                INNER JOIN product d ON b.productID = d.productCode
+                '.$group_by.'
+                ';
+
+        return $this->db->query($sql)->result();
+    }
+
     public function getWarehouseData($id)
     {
        $where = '';
