@@ -47,9 +47,11 @@
 					<div class="card card-custom gutter-b card-stretch card-shadowless bg-light">
 					    <!--begin::Header-->
 					    <div class="card-header border-0 pt-5">
+                        <?php if( $this->session->userdata('roles') != "owner"){ ?>
 							<div class="">
 								<a type="button" class="btn btn-primary" data-toggle="modal" data-target="#addpc">Tambah Produk Cabang</a>
 							</div>
+                        <?php } ?>
 						</div>
 						<!--end::Header-->
 						<!--begin::Body-->

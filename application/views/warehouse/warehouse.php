@@ -104,7 +104,18 @@
       </div>
       <div class="modal-body">
             <form>
-            <input type="text" class="form-control" id="wid" value="<?php echo $this->session->userdata('warehouseID') ?>" hidden>
+            <?php if($this->session->userdata('roles') == "owner"){ ?>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Pilih Warehouse</label>
+                <select class="form-control" id="wid">
+                        <option value="">Pilih Warehouse</option>
+                        <option value="1">Warehouse Jakarta Timur</option>
+                        <option value="3">Warehouse Jakarta Selatan</option>
+                </select>
+            </div>
+        <?php }else{ ?>
+            <input type="text" class="form-control" id="wid" value="<?php echo $this->session->userdata('branchID') ?>" hidden>
+        <?php } ?>
         <div class="form-group">
         <label for="exampleFormControlSelect1">Code Barang</label>
             <input type="text" class="form-control" id="codebarang">
@@ -235,6 +246,7 @@
                                 $('#table_warehouse').DataTable().destroy();
                                 cabangData();
                                 $("#codebarang").val("");
+                                $("#pwarehouse").val("");
                                 $("#namabarang").val("");
                                 $("#stockbarang").val("");
                                 $("#pricebarang").val("");
